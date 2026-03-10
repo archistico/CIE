@@ -1,6 +1,6 @@
 # CIE Reader
 
-Applicazione .NET per leggere una **Carta d'Identità Elettronica (CIE)** tramite lettore smart card compatibile, estrarre i dati principali, decodificare la **MRZ**, salvare la foto della carta e visualizzare tutto sia da **console** sia da **WinForms**.
+Applicazione .NET per leggere una **Carta d'IdentitÃ  Elettronica (CIE)** tramite lettore smart card compatibile, estrarre i dati principali, decodificare la **MRZ**, salvare la foto della carta e visualizzare tutto sia da **console** sia da **WinForms**.
 
 Screenshot:
 
@@ -12,8 +12,10 @@ La soluzione contiene due progetti principali:
 
 * **CieReader**: libreria / applicazione con la logica di lettura della CIE, parsing JSON, parsing MRZ e salvataggio immagini.
 * **DemoDatiCIE**: applicazione WinForms per leggere e visualizzare i dati della CIE in una UI desktop.
+  
+Nella cartella CIE/DemoDatiCIE/bin/Debug/net9.0-windows7.0/ ci sono gli eseguibili con tutte le dll pronte per lanciare l'applicazione
 
-## Funzionalità
+## FunzionalitÃ 
 
 * lettura dati anagrafici dalla CIE
 * acquisizione MRZ
@@ -34,7 +36,7 @@ La soluzione contiene due progetti principali:
 
 ## Lettore consigliato
 
-Per la lettura della CIE è consigliato un lettore smart card compatibile PC/SC. Un modello consigliato e testato per questo tipo di utilizzo è:
+Per la lettura della CIE Ã¨ consigliato un lettore smart card compatibile PC/SC. Un modello consigliato e testato per questo tipo di utilizzo ï¿½:
 
 * **cyberJack RFID basis**
 * Pagina prodotto: [https://www.reiner-sct.com/en/produkt/cyberjack-rfid-basis/](https://www.reiner-sct.com/en/produkt/cyberjack-rfid-basis/)
@@ -57,7 +59,7 @@ A seconda della configurazione del progetto, vengono usate queste librerie:
 
 `CSJ2K` e `Nancy` **non sono residui da rimuovere**: vengono usati internamente da `CIE.MRTD.SDK`.
 
-Per la conversione dell'immagine JP2 in JPG è consigliato usare un pacchetto **Magick.NET** specifico per piattaforma:
+Per la conversione dell'immagine JP2 in JPG Ã¨ consigliato usare un pacchetto **Magick.NET** specifico per piattaforma:
 
 * `Magick.NET-Q8-x64` per build x64
 * `Magick.NET-Q8-x86` per build x86
@@ -98,7 +100,7 @@ Classe che dialoga con il lettore smart card e restituisce il contenuto della CI
 
 ## CAN della CIE
 
-Per leggere la carta è richiesto il **CAN** (*Card Access Number*), cioè il codice di **6 cifre** stampato sul fronte della CIE, normalmente in basso a destra.
+Per leggere la carta Ã¨ richiesto il **CAN** (*Card Access Number*), cioÃ¨ il codice di **6 cifre** stampato sul fronte della CIE, normalmente in basso a destra.
 
 Il progetto valida il CAN prima di tentare la lettura.
 
@@ -107,7 +109,7 @@ Il progetto valida il CAN prima di tentare la lettura.
 La foto viene salvata in due formati:
 
 * **JP2**: formato originale letto dalla carta
-* **JPG**: conversione più comoda per apertura e visualizzazione
+* **JPG**: conversione piÃ¹ comoda per apertura e visualizzazione
 
 I file vengono salvati, di default, nella cartella dell'eseguibile.
 
@@ -125,12 +127,12 @@ Il progetto `DemoDatiCIE` consente di:
 
 ## Configurazione consigliata piattaforma
 
-È consigliato configurare la soluzione con build separate:
+Ãˆ consigliato configurare la soluzione con build separate:
 
 * **x64**
 * **x86**
 
-ed evitare `Any CPU` quando si usa `Magick.NET`, così da avere output più pulito e prevedibile.
+ed evitare `Any CPU` quando si usa `Magick.NET`, cosÃ¬ da avere output piÃ¹ pulito e prevedibile.
 
 ## Come eseguire
 
