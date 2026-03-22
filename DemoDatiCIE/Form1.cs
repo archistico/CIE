@@ -38,7 +38,7 @@ namespace DemoDatiCIE
                 btnLeggiCie.Enabled = false;
 
                 DatiCie dati = DatiCie.ReadCie(can);
-
+                
                 FillForm(dati);
             }
             catch (Exception ex)
@@ -61,7 +61,7 @@ namespace DemoDatiCIE
             txtCognome.Text = dati.Cognome;
             txtNome.Text = dati.Nome;
             txtLocalitaNascita.Text = dati.LocalitaNascita;
-            txtDataNascita.Text = dati.DataNascita;
+            txtDataNascita.Text = FormatItalianDate(dati.DataNascita);
             txtProvinciaNascita.Text = dati.ProvinciaNascita;
             txtIndirizzoResidenza.Text = dati.IndirizzoResidenza;
             txtCittaResidenza.Text = dati.CittaResidenza;
@@ -157,6 +157,105 @@ namespace DemoDatiCIE
         {
             string esito = ok ? "OK" : "ATTENZIONE";
             return $"Letto: {digit} - Esito: {esito}";
+        }
+
+        private void btnEsporta_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string nome = SafeFileNamePart(txtNome.Text).ToUpper();
+                string cognome = SafeFileNamePart(txtCognome.Text).ToUpper();
+                string codiceFiscale = SafeFileNamePart(txtCodiceFiscale.Text).ToUpper();
+
+                string nomeFile = $"{nome}_{cognome}_{codiceFiscale}.txt";
+                string cartellaDestinazione = Application.StartupPath;
+                string percorsoCompleto = Path.Combine(cartellaDestinazione, nomeFile);
+
+                string contenuto =
+                    "---------------------------------------------------------------" + Environment.NewLine +
+                    "Cognome: " + txtCognome.Text + Environment.NewLine +
+                    "Nome: " + txtNome.Text + Environment.NewLine +
+                    "---------------------------------------------------------------" + Environment.NewLine +
+                    "Data di nascita: " + txtDataNascita.Text + Environment.NewLine +
+                    "Località di nascita: " + txtLocalitaNascita.Text + Environment.NewLine +
+                    "Provincia di nascita: " + txtProvinciaNascita.Text + Environment.NewLine +
+                    "---------------------------------------------------------------" + Environment.NewLine +
+                    "Indirizzo di residenza: " + txtIndirizzoResidenza.Text + Environment.NewLine +
+                    "Città di residenza: " + txtCittaResidenza.Text + Environment.NewLine +
+                    "Provincia di residenza: " + txtProvinciaResidenza.Text + Environment.NewLine +
+                    "---------------------------------------------------------------" + Environment.NewLine +
+                    "Codice fiscale: " + txtCodiceFiscale.Text + Environment.NewLine +
+                    "---------------------------------------------------------------" + Environment.NewLine +
+                    "Tipo documento: " + txtTipoDocumento.Text + Environment.NewLine +
+                    "Numero documento: " + txtNumeroDocumento.Text + Environment.NewLine +
+                    "Scadenza carta: " + txtScadenzaCarta.Text + Environment.NewLine +
+                    "---------------------------------------------------------------" + Environment.NewLine +
+                    "Nazionalità: " + txtNazionalita.Text + Environment.NewLine +
+                    "Cittadinanza: " + txtCittadinanza.Text + Environment.NewLine +
+                    "Sesso: " + txtSesso.Text + Environment.NewLine +
+                    "---------------------------------------------------------------" + Environment.NewLine;
+
+                File.WriteAllText(percorsoCompleto, contenuto, System.Text.Encoding.UTF8);
+                System.Diagnostics.Process.Start("explorer.exe", "/select,\"" + percorsoCompleto + "\"");
+                MessageBox.Show(
+                    "Dati esportati correttamente in:\r\n" + percorsoCompleto,
+                    "Esportazione completata",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(
+                    "Errore durante l'esportazione:\r\n\r\n" + ex.Message,
+                    "Errore",
+                    MessageBoxButtons.OK,
+                    MessageBoxIcon.Error);
+            }
+        }
+
+        private static string SafeFileNamePart(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return "VUOTO";
+            }
+
+            foreach (char c in Path.GetInvalidFileNameChars())
+            {
+                value = value.Replace(c, '_');
+            }
+
+            return value.Trim().Replace(' ', '_');
+        }
+
+        private static string FormatItalianDate(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+
+            DateTime data;
+            if (DateTime.TryParseExact(
+                    value,
+                    "yyyy-MM-dd",
+                    System.Globalization.CultureInfo.InvariantCulture,
+                    System.Globalization.DateTimeStyles.None,
+                    out data))
+            {
+                return data.ToString("dd/MM/yyyy");
+            }
+
+            return value;
+        }
+
+        private void txtCan_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                btnLeggiCie_Click(btnLeggiCie, EventArgs.Empty);
+            }
         }
     }
 }
